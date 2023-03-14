@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Malicious URL Scanner</title>
+  </head>
+  <body>
+    <h1>Malicious URL Scanner</h1>
+    <form id="url-form">
+      <label for="url-input">Enter URL to scan:</label><br />
+      <input type="text" id="url-input" name="url" /><br /><br />
+      <input type="submit" value="Scan URL" />
+    </form>
+    <div id="results"></div>
+
+    <script>
+      // Replace with your own API key
+      const apiKey = "KLQS3ATyOPEX1RqCqwXQC7NasahyH8bp";
+
+      // Get references to the form and results elements
+      const form = document.getElementById("url-form");
+      const results = document.getElementById("results");
+
+      // Add an event listener for form submission
+      form.addEventListener("submit", (event) => {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get the entered URL from the input field
+        const url = document.getElementById("url-input").value;
+
+        // Send an HTTP request to IPQualityScore's Malicious URL Scanner API
+        fetch(`https://ipqualityscore.com/api/json/url/${apiKey}/${encodeURIComponent(url)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Parse the JSON response and display relevant information about the security of the URL
+
+            let resultText = `URL: ${data.url}\n`;
+            resultText += `Overall Risk Score: ${data.overall_score}\n`;
+            resultText += `Phishing: ${data.phishing}\n`;
+            resultText += `Malware: ${data.malware}\n`;
+
+            results.textContent = resultText;
+          });
+      });
+    </script>
+  </body>
+</html>
