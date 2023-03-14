@@ -5,42 +5,34 @@
   </head>
   <body>
     <h1>Malicious URL Scanner</h1>
-    <form id="url-form">
-      <label for="url-input">Enter URL to scan:</label><br />
-      <input type="text" id="url-input" name="url" /><br /><br />
-      <input type="submit" value="Scan URL" />
+    <form>
+      <label for="url-input">Enter URL:</label>
+      <input type="text" id="url-input" name="url">
+      <button type="button" id="submit-button">Check URL</button>
     </form>
-    <div id="results"></div>
+    
+    <div id="result"></div>
 
+
+    <!-- Add your JavaScript code here -->
     <script>
-      // Replace with your own API key
-      const apiKey = "KLQS3ATyOPEX1RqCqwXQC7NasahyH8bp";
-
-      // Get references to the form and results elements
-      const form = document.getElementById("url-form");
-      const results = document.getElementById("results");
-
-      // Add an event listener for form submission
-      form.addEventListener("submit", (event) => {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Get the entered URL from the input field
-        const url = document.getElementById("url-input").value;
-
-        // Send an HTTP request to IPQualityScore's Malicious URL Scanner API
-        fetch(`https://ipqualityscore.com/api/json/url/${apiKey}/${encodeURIComponent(url)}`)
-          .then((response) => response.json())
-          .then((data) => {
-            // Parse the JSON response and display relevant information about the security of the URL
-
-            let resultText = `URL: ${data.url}\n`;
-            resultText += `Overall Risk Score: ${data.overall_score}\n`;
-            resultText += `Phishing: ${data.phishing}\n`;
-            resultText += `Malware: ${data.malware}\n`;
-
-            results.textContent = resultText;
-          });
+      const submitButton = document.getElementById('submit-button');
+      submitButton.addEventListener('click', async (event) => {
+        event.preventDefault(); // Prevent form submission
+        const urlInput = document.getElementById('url-input');
+        const url = urlInput.value;
+        const apiKey = 'KLQS3ATyOPEX1RqCqwXQC7NasahyH8bp';
+        const apiUrl = `https://www.ipqualityscore.com/api/v1/url?apikey=${apiKey}&url=${url}&strictness=3&user_agent=Mozilla/5.0`;
+        
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          const fraudScore = data.fraud_score;
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = `The URL ${url} has a fraud score of ${fraudScore}`;
+        } catch (error) {
+          console.error(error);
+        }
       });
     </script>
   </body>
